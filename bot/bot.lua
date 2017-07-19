@@ -285,12 +285,8 @@ function file_cb(msg)
 end
 end
 
+
 function tdcli_update_callback (data)
-	if data.message_ then
-		if msg_caption ~= get_text_msg() then
-			msg_caption = get_text_msg()
-		end
-	end
 	if (data.ID == "UpdateNewMessage") then
 
 		local msg = data.message_
@@ -308,14 +304,12 @@ function tdcli_update_callback (data)
 				do_notify (chat.title_, msg.content_.ID)
 			end
 		end
-		if msg_valid(msg) then
+   if msg_valid(msg) then
 		var_cb(msg, msg)
-		file_cb(msg)
 	if msg.content_.ID == "MessageText" then
 			msg.text = msg.content_.text_
 			msg.edited = false
 			msg.pinned = false
-
 	elseif msg.content_.ID == "MessagePinMessage" then
 		msg.pinned = true
 	elseif msg.content_.ID == "MessagePhoto" then
@@ -356,9 +350,12 @@ function tdcli_update_callback (data)
 			msg.joinuser = msg.sender_user_id_
 	elseif msg.content_.ID == "MessageChatDeleteMember" then
 			msg.deluser = true
-      end
 	end
-	elseif data.ID == "UpdateMessageContent" then  
+	if msg.content_.photo_ then
+		return false
+	end
+end
+	elseif data.ID == "UpdateMessageContent" then
 		cmsg = data
 		local function edited_cb(arg, data)
 			msg = data
@@ -370,9 +367,9 @@ function tdcli_update_callback (data)
 				msg.media.caption = cmsg.new_content_.caption_
 			end
 			msg.edited = true
-		if msg_valid(msg) then
+      if msg_valid(msg) then
 			var_cb(msg, msg)
-        end
+         end
 		end
 	tdcli_function ({ ID = "GetMessage", chat_id_ = data.chat_id_, message_id_ = data.message_id_ }, edited_cb, nil)
 	elseif data.ID == "UpdateFile" then
@@ -384,4 +381,3 @@ function tdcli_update_callback (data)
 		tdcli_function ({ID="GetChats", offset_order_="9223372036854775807", offset_chat_id_=0, limit_=20}, dl_cb, nil)    
 	end
 end
-
