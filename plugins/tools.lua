@@ -1070,6 +1070,25 @@ return '_گروه ساخته شد!_'
    end
 end
 
+	if matches[1] == 'markread' and is_sudo(msg) or matches[1] == 'Markread' and is_sudo(msg) then
+if matches[2] == 'on' then
+redis:set('markread','on')
+   if not lang then
+return '_Markread >_ *ON*'
+else
+return '_تیک دوم >_ *روشن*'
+   end
+end
+if matches[2] == 'off' then
+redis:set('markread','off')
+  if not lang then
+return '_Markread >_ *OFF*'
+   else
+return '_تیک دوم >_ *خاموش*'
+      end
+   end
+end
+	
 if ((matches[1] == 'createsuper' and not Clang) or (matches[1] == "ساخت سوپرگروه" and Clang)) and is_admin(msg) then
 local text = matches[2]
 tdcli.createNewChannelChat(text, 1, '@kiavair', (function(b, d) tdcli.addChatMember(d.id_, msg.from.id, 0, dl_cb, nil) end), nil)
@@ -1749,6 +1768,8 @@ patterns = {
 "^[!/#](bc) +(.*) (-%d+)$",
 "^[!/#](broadcast) (.*)$",
 "^[!/#](sendfile) (.*) (.*)$",
+		"^[!/#]([Mm]arkread) (.*)$",
+"^([Mm]arkread) (.*)$",	
 "^[!/#](save) (.*)$",
 "^[!/#](sendplug) (.*)$",
 "^[!/#](savefile) (.*)$",
